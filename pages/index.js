@@ -3,6 +3,10 @@ import Head from 'next/head';
 import PropTypes from 'prop-types';
 import path from 'path';
 import classNames from 'classnames';
+import { IconButton } from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
+import SaveIcon from '@material-ui/icons/Save';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import { listFiles } from '../files';
 
@@ -87,7 +91,20 @@ function Previewer({ file }) {
 
   return (
     <div className={css.preview}>
-      <div className={css.title}>{path.basename(file.name)}</div>
+      <div className={css.title}>
+        {path.basename(file.name)}{' '}
+        <span className={css.btns}>
+          <IconButton aria-label="Edit" size="small">
+            <EditIcon fontSize="small" />
+          </IconButton>
+          <IconButton aria-label="Save" size="small">
+            <SaveIcon fontSize="small" />
+          </IconButton>
+          <IconButton aria-label="Delete" size="small">
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+        </span>
+      </div>
       <div className={css.content}>{value}</div>
     </div>
   );

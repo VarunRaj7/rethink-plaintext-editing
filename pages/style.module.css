@@ -23,8 +23,8 @@ body {
 
 /* Layout */
 .page {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   background-color: var(--color-background);
   display: flex;
@@ -191,7 +191,17 @@ body {
   line-height: 1.6;
   color: var(--color-text-dark);
   white-space: pre-wrap;
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier,
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
     monospace;
   padding: 20px;
+}
+
+.preview .btns {
+  float: right;
+}
+
+.preview .icons {
+  height: 15.56px;
+  width: 13px;
+  margin-right: 5px;
 }
