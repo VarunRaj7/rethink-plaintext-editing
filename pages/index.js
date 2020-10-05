@@ -12,7 +12,7 @@ import { TextareaAutosize } from '@material-ui/core';
 import { listFiles } from '../files';
 
 // Used below, these need to be registered
-import MarkdownEditor from '../MarkdownEditor';
+import MarkdownEditor from '../components/MarkdownEditor';
 import PlaintextEditor from '../components/PlaintextEditor';
 
 import IconPlaintextSVG from '../public/icon-plaintext.svg';
