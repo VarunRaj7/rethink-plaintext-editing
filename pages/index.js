@@ -7,6 +7,7 @@ import { IconButton } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { TextareaAutosize } from '@material-ui/core';
 
 import { listFiles } from '../files';
 
@@ -28,7 +29,7 @@ const TYPE_TO_ICON = {
   'application/json': IconJSONSVG
 };
 
-function FilesTable({ files, activeFile, setActiveFile }) {
+function FilesTable({ files, activeFile, setActiveFile, setEditState }) {
   return (
     <div className={css.files}>
       <table>
@@ -46,7 +47,10 @@ function FilesTable({ files, activeFile, setActiveFile }) {
                 css.row,
                 activeFile && activeFile.name === file.name ? css.active : ''
               )}
-              onClick={() => setActiveFile(file)}
+              onClick={() => {
+                setActiveFile(file);
+                setEditState(false);
+              }}
             >
               <td className={css.file}>
                 <div
@@ -80,9 +84,8 @@ FilesTable.propTypes = {
   setActiveFile: PropTypes.func
 };
 
-function Previewer({ file }) {
+function Previewer({ file, editState, setEditState, write }) {
   const [value, setValue] = useState('');
-  const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -90,8 +93,18 @@ function Previewer({ file }) {
     })();
   }, [file]);
 
-  function handleEdit() {
-    setIsEdit(true);
+  function handleEdit(newState = !editState) {
+    setEditState(newState);
+  }
+
+  function handleTextArea(e) {
+    setValue(e.target.value);
+  }
+
+  function handleTextAreaOnSave() {
+    setValue(value.trim());
+    write(file.name, value.trim());
+    handleEdit(false);
   }
 
   return (
@@ -102,7 +115,13 @@ function Previewer({ file }) {
           <IconButton aria-label="Edit" size="small" onClick={handleEdit}>
             <EditIcon fontSize="small" />
           </IconButton>
-          <IconButton aria-label="Save" size="small">
+          <IconButton
+            aria-label="Save"
+            size="small"
+            onClick={() => {
+              handleTextAreaOnSave();
+            }}
+          >
             <SaveIcon fontSize="small" />
           </IconButton>
           <IconButton aria-label="Delete" size="small">
@@ -110,9 +129,11 @@ function Previewer({ file }) {
           </IconButton>
         </span>
       </div>
-      <div className={css.content}>
-        {!isEdit && value}
-        {isEdit && 'Edit Me'}
+      <div className={editState === false ? css.content : css.edit}>
+        {!editState && value}
+        {editState && (
+          <PlaintextEditor value={value} handleTextArea={handleTextArea} />
+        )}
       </div>
     </div>
   );
@@ -131,17 +152,45 @@ const REGISTERED_EDITORS = {
 function PlaintextFilesChallenge() {
   const [files, setFiles] = useState([]);
   const [activeFile, setActiveFile] = useState(null);
+  const [editState, setEditState] = useState(false);
 
   useEffect(() => {
     const files = listFiles();
     setFiles(files);
   }, []);
 
-  const write = file => {
-    console.log('Writing soon... ', file.name);
+  const write = (fileName, value) => {
+    let ftype = null;
+    let ind = null;
 
-    // TODO: Write the file to the `files` array
+    files.map((f, i) => {
+      if (f.name === fileName) {
+        ftype = f.type;
+        ind = i;
+      }
+    });
+
+    files[ind] = new File([value], fileName, {
+      type: ftype,
+      lastModified: new Date()
+    });
   };
+
+  // const del = fileName => {
+  //   let ind = null;
+
+  //   files.map((f, i) => {
+  //     if (f.name === fileName) {
+  //       ind = i;
+  //     }
+  //   });
+
+  //   files.splice(ind, 1);
+
+  //   console.log(files);
+
+  //   setFiles(files);
+  // };
 
   const Editor = activeFile ? REGISTERED_EDITORS[activeFile.type] : null;
 
@@ -164,6 +213,7 @@ function PlaintextFilesChallenge() {
           files={files}
           activeFile={activeFile}
           setActiveFile={setActiveFile}
+          setEditState={setEditState}
         />
 
         <div style={{ flex: 1 }}></div>
@@ -183,7 +233,14 @@ function PlaintextFilesChallenge() {
         {activeFile && (
           <>
             {Editor && <Editor file={activeFile} write={write} />}
-            {!Editor && <Previewer file={activeFile} />}
+            {!Editor && (
+              <Previewer
+                file={activeFile}
+                editState={editState}
+                setEditState={setEditState}
+                write={write}
+              />
+            )}
           </>
         )}
 

@@ -205,3 +205,8 @@ body {
   width: 13px;
   margin-right: 5px;
 }
+
+/* edit styles */
+.preview .edit {
+  padding: 10px;
+}

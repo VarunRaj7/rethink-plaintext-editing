@@ -1,21 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { TextareaAutosize } from '@material-ui/core';
 
 import css from './style.css';
 
-function PlaintextEditor({ file, write }) {
-  console.log(file, write);
+function PlaintextEditor({ value, handleTextArea }) {
   return (
-    <div className={css.editor}>
-      <h3>TODO</h3>
-      <i>text/plain</i>
-    </div>
+    <TextareaAutosize
+      value={value}
+      onChange={handleTextArea}
+      className={css.editor}
+    />
   );
 }
 
 PlaintextEditor.propTypes = {
-  file: PropTypes.object,
-  write: PropTypes.func
+  value: PropTypes.object,
+  handleTextArea: PropTypes.func
 };
 
 export default PlaintextEditor;
