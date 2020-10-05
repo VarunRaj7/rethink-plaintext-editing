@@ -82,6 +82,7 @@ FilesTable.propTypes = {
 
 function Previewer({ file }) {
   const [value, setValue] = useState('');
+  const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -89,12 +90,16 @@ function Previewer({ file }) {
     })();
   }, [file]);
 
+  function handleEdit() {
+    setIsEdit(true);
+  }
+
   return (
     <div className={css.preview}>
       <div className={css.title}>
         {path.basename(file.name)}{' '}
         <span className={css.btns}>
-          <IconButton aria-label="Edit" size="small">
+          <IconButton aria-label="Edit" size="small" onClick={handleEdit}>
             <EditIcon fontSize="small" />
           </IconButton>
           <IconButton aria-label="Save" size="small">
@@ -105,7 +110,10 @@ function Previewer({ file }) {
           </IconButton>
         </span>
       </div>
-      <div className={css.content}>{value}</div>
+      <div className={css.content}>
+        {!isEdit && value}
+        {isEdit && 'Edit Me'}
+      </div>
     </div>
   );
 }
