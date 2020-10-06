@@ -9,12 +9,11 @@ function MarkdownEditor({ value, handleValue }) {
     handleValue(text.replace(/\d/g, ''));
   };
   return (
-    <div>
+    <div className={css.editor}>
       <MdEditor
         value={value}
         onChange={handleChange}
         renderHTML={text => <ReactMarkdown source={text} />}
-        className={css.editor}
       />
     </div>
   );
