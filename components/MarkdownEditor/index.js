@@ -1,16 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import MEDitor from '@uiw/react-md-editor';
-// import css from './style.css';
+import MdEditor from 'react-markdown-editor-lite';
+import ReactMarkdown from 'react-markdown';
+import css from './style.module.css';
 
 function MarkdownEditor({ value, handleValue }) {
+  const handleChange = ({ html, text }) => {
+    handleValue(text.replace(/\d/g, ''));
+  };
   return (
-    <div className="container">
-      <MEDitor value={value} onChange={handleValue} />
-      <div style={{ padding: '50px 0 0 0' }} />
+    <div>
+      <MdEditor
+        value={value}
+        onChange={handleChange}
+        renderHTML={text => <ReactMarkdown source={text} />}
+        className={css.editor}
+      />
     </div>
   );
 }
+
+// style={{
+//   height: '500px'
+// }}
 
 MarkdownEditor.propTypes = {
   value: PropTypes.object,

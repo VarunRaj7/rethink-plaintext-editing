@@ -12,6 +12,7 @@
 //     return config;
 //   }
 // });
+
 module.exports = {
   webpack: config => {
     // Load SVGs inline

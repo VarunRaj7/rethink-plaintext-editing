@@ -7,12 +7,19 @@ import { IconButton } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/Delete';
+import dynamic from 'next/dynamic';
 // import { TextareaAutosize } from '@material-ui/core';
 
 import { listFiles } from '../files';
 
 // Used below, these need to be registered
-import MarkdownEditor from '../components/MarkdownEditor';
+const MarkdownEditor = dynamic(
+  () => {
+    return import('../components/MarkdownEditor');
+  },
+  { ssr: false }
+);
+
 import PlaintextEditor from '../components/PlaintextEditor';
 
 // Used below, these need to be registered
@@ -88,7 +95,14 @@ FilesTable.propTypes = {
   setActiveFile: PropTypes.func
 };
 
-function Previewer({ file, editState, setEditState, write, Editor }) {
+function Previewer({
+  file,
+  editState,
+  setEditState,
+  write,
+  Editor,
+  FilePreviewer
+}) {
   const [value, setValue] = useState('');
 
   useEffect(() => {
@@ -133,13 +147,13 @@ function Previewer({ file, editState, setEditState, write, Editor }) {
           </IconButton>
         </span>
       </div>
-      <div className={editState === false ? css.content : css.edit}>
-        {!editState && value}
-        {editState && <Editor value={value} handleValue={handleValue} />}
-      </div>
+      {!editState && <FilePreviewer value={value} />}
+      {editState && <Editor value={value} handleValue={handleValue} />}
     </div>
   );
 }
+
+//className={editState === false ? css.content : css.edit}
 
 Previewer.propTypes = {
   file: PropTypes.object
