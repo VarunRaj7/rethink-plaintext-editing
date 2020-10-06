@@ -4,11 +4,11 @@ import { TextareaAutosize } from '@material-ui/core';
 
 import css from './style.css';
 
-function PlaintextEditor({ value, handleTextArea }) {
+function PlaintextEditor({ value, handleValue }) {
   return (
     <TextareaAutosize
       value={value}
-      onChange={handleTextArea}
+      onChange={e => handleValue(e.target.value)}
       className={css.editor}
     />
   );
@@ -16,7 +16,7 @@ function PlaintextEditor({ value, handleTextArea }) {
 
 PlaintextEditor.propTypes = {
   value: PropTypes.object,
-  handleTextArea: PropTypes.func
+  handleValue: PropTypes.func
 };
 
 export default PlaintextEditor;

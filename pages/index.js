@@ -7,13 +7,17 @@ import { IconButton } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { TextareaAutosize } from '@material-ui/core';
+// import { TextareaAutosize } from '@material-ui/core';
 
 import { listFiles } from '../files';
 
 // Used below, these need to be registered
 import MarkdownEditor from '../components/MarkdownEditor';
 import PlaintextEditor from '../components/PlaintextEditor';
+
+// Used below, these need to be registered
+import MarkdownPreviewer from '../components/MarkdownPreviewer';
+import PlaintextPreviewer from '../components/PlaintextPreviewer';
 
 import IconPlaintextSVG from '../public/icon-plaintext.svg';
 import IconMarkdownSVG from '../public/icon-markdown.svg';
@@ -84,7 +88,7 @@ FilesTable.propTypes = {
   setActiveFile: PropTypes.func
 };
 
-function Previewer({ file, editState, setEditState, write }) {
+function Previewer({ file, editState, setEditState, write, Editor }) {
   const [value, setValue] = useState('');
 
   useEffect(() => {
@@ -97,8 +101,8 @@ function Previewer({ file, editState, setEditState, write }) {
     setEditState(newState);
   }
 
-  function handleTextArea(e) {
-    setValue(e.target.value);
+  function handleValue(val) {
+    setValue(val);
   }
 
   function handleTextAreaOnSave() {
@@ -131,9 +135,7 @@ function Previewer({ file, editState, setEditState, write }) {
       </div>
       <div className={editState === false ? css.content : css.edit}>
         {!editState && value}
-        {editState && (
-          <PlaintextEditor value={value} handleTextArea={handleTextArea} />
-        )}
+        {editState && <Editor value={value} handleValue={handleValue} />}
       </div>
     </div>
   );
@@ -145,8 +147,13 @@ Previewer.propTypes = {
 
 // Uncomment keys to register editors for media types
 const REGISTERED_EDITORS = {
-  // 'text/plain': PlaintextEditor,
-  // 'text/markdown': MarkdownEditor
+  'text/plain': PlaintextEditor,
+  'text/markdown': MarkdownEditor
+};
+
+const REGISTERED_PREVIEWERS = {
+  'text/plain': PlaintextPreviewer,
+  'text/markdown': MarkdownPreviewer
 };
 
 function PlaintextFilesChallenge() {
@@ -193,6 +200,11 @@ function PlaintextFilesChallenge() {
   // };
 
   const Editor = activeFile ? REGISTERED_EDITORS[activeFile.type] : null;
+  const FilePreviewer = activeFile
+    ? REGISTERED_PREVIEWERS[activeFile.type]
+    : null;
+
+  console.log(Editor);
 
   return (
     <div className={css.page}>
@@ -232,15 +244,16 @@ function PlaintextFilesChallenge() {
       <main className={css.editorWindow}>
         {activeFile && (
           <>
-            {Editor && <Editor file={activeFile} write={write} />}
-            {!Editor && (
+            {
               <Previewer
                 file={activeFile}
                 editState={editState}
                 setEditState={setEditState}
                 write={write}
+                Editor={Editor}
+                FilePreviewer={FilePreviewer}
               />
-            )}
+            }
           </>
         )}
 
@@ -253,3 +266,5 @@ function PlaintextFilesChallenge() {
 }
 
 export default PlaintextFilesChallenge;
+
+// {Editor && <Editor file={activeFile} write={write} />}
