@@ -1,0 +1,19 @@
+.editor {
+  width: 620px;
+  background-color: var(--color-white);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
+    monospace;
+  line-height: 1.6;
+  color: var(--color-text-dark);
+  border-color: turquoise;
+  border-radius: 5px;
+  outline-color: turquoise;
+  resize: vertical;
+  margin: 10px;
+}

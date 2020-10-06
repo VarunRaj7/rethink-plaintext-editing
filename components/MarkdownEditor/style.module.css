@@ -1,0 +1,6 @@
+.editor {
+  width: 640px;
+  background-color: var(--color-white);
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
+    monospace;
+}

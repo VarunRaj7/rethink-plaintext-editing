@@ -1,0 +1,11 @@
+.content {
+  width: 620px;
+  margin: 10px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-text-dark);
+  white-space: pre-wrap;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
+    monospace;
+  padding: 20px;
+}
