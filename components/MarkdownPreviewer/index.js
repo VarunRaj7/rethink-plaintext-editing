@@ -9,8 +9,8 @@ function MarkdownPreviewer({ value }) {
     <div>
       <ReactMarkdown
         source={value}
-        className={css.content}
         escapeHtml={false}
+        className={css.content}
       />
     </div>
   );
