@@ -19,7 +19,12 @@ const MarkdownEditor = dynamic(
   },
   { ssr: false }
 );
-
+const CodeEditor = dynamic(
+  () => {
+    return import('../components/CodeEditor');
+  },
+  { ssr: false }
+);
 import PlaintextEditor from '../components/PlaintextEditor';
 
 // Used below, these need to be registered
@@ -32,6 +37,75 @@ import IconJavaScriptSVG from '../public/icon-javascript.svg';
 import IconJSONSVG from '../public/icon-json.svg';
 
 import css from './style.module.css';
+
+const languages = [
+  'abap',
+  'apex',
+  'azcli',
+  'bat',
+  'cameligo',
+  'clojure',
+  'coffee',
+  'cpp',
+  'csharp',
+  'csp',
+  'css',
+  'dart',
+  'dockerfile',
+  'fsharp',
+  'go',
+  'graphql',
+  'handlebars',
+  'hcl',
+  'html',
+  'ini',
+  'java',
+  'javascript',
+  'json',
+  'julia',
+  'kotlin',
+  'less',
+  'lexon',
+  'lua',
+  'mips',
+  'msdax',
+  'mysql',
+  'objective-c',
+  'pascal',
+  'pascaligo',
+  'perl',
+  'pgsql',
+  'php',
+  'postiats',
+  'powerquery',
+  'powershell',
+  'pug',
+  'python',
+  'r',
+  'razor',
+  'redis',
+  'redshift',
+  'restructuredtext',
+  'ruby',
+  'rust',
+  'sb',
+  'scala',
+  'scheme',
+  'scss',
+  'shell',
+  'solidity',
+  'sophia',
+  'sql',
+  'st',
+  'swift',
+  'systemverilog',
+  'tcl',
+  'twig',
+  'typescript',
+  'vb',
+  'xml',
+  'yaml'
+];
 
 const TYPE_TO_ICON = {
   'text/plain': IconPlaintextSVG,
@@ -95,7 +169,7 @@ FilesTable.propTypes = {
   setActiveFile: PropTypes.func
 };
 
-function Previewer({
+function Loader({
   file,
   editState,
   setEditState,
@@ -116,10 +190,12 @@ function Previewer({
   }
 
   function handleValue(val) {
+    console.log(val);
     setValue(val);
   }
 
-  function handleTextAreaOnSave() {
+  function handleOnSave() {
+    console.log('Saving..');
     setValue(value.trim());
     write(file.name, value.trim());
     handleEdit(false);
@@ -137,7 +213,7 @@ function Previewer({
             aria-label="Save"
             size="small"
             onClick={() => {
-              handleTextAreaOnSave();
+              handleOnSave();
             }}
           >
             <SaveIcon fontSize="small" />
@@ -148,26 +224,30 @@ function Previewer({
         </span>
       </div>
       {!editState && <FilePreviewer value={value} />}
-      {editState && <Editor value={value} handleValue={handleValue} />}
+      {editState && (
+        <Editor value={value} handleValue={handleValue} ftype={file.type} />
+      )}
     </div>
   );
 }
 
 //className={editState === false ? css.content : css.edit}
 
-Previewer.propTypes = {
+Loader.propTypes = {
   file: PropTypes.object
 };
 
 // Uncomment keys to register editors for media types
 const REGISTERED_EDITORS = {
   'text/plain': PlaintextEditor,
-  'text/markdown': MarkdownEditor
+  'text/markdown': MarkdownEditor,
+  'text/code': CodeEditor
 };
 
 const REGISTERED_PREVIEWERS = {
   'text/plain': PlaintextPreviewer,
-  'text/markdown': MarkdownPreviewer
+  'text/markdown': MarkdownPreviewer,
+  'text/code': PlaintextPreviewer
 };
 
 function PlaintextFilesChallenge() {
@@ -213,12 +293,21 @@ function PlaintextFilesChallenge() {
   //   setFiles(files);
   // };
 
-  const Editor = activeFile ? REGISTERED_EDITORS[activeFile.type] : null;
-  const FilePreviewer = activeFile
-    ? REGISTERED_PREVIEWERS[activeFile.type]
-    : null;
-
-  console.log(Editor);
+  const filetype = activeFile ? activeFile.type.split('/')[1] : null;
+  var Editor = null;
+  var FilePreviewer = null;
+  if (activeFile) {
+    if (languages.includes(filetype)) {
+      Editor = REGISTERED_EDITORS['text/code'];
+      FilePreviewer = REGISTERED_PREVIEWERS['text/code'];
+    } else {
+      Editor = REGISTERED_EDITORS[activeFile.type];
+      FilePreviewer = REGISTERED_PREVIEWERS[activeFile.type];
+    }
+  } else {
+    Editor = REGISTERED_EDITORS['text/plain'];
+    FilePreviewer = REGISTERED_PREVIEWERS['text/plain'];
+  }
 
   return (
     <div className={css.page}>
@@ -259,7 +348,7 @@ function PlaintextFilesChallenge() {
         {activeFile && (
           <>
             {
-              <Previewer
+              <Loader
                 file={activeFile}
                 editState={editState}
                 setEditState={setEditState}
