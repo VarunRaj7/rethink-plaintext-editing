@@ -25,6 +25,12 @@ const CodeEditor = dynamic(
   },
   { ssr: false }
 );
+const CodePreviewer = dynamic(
+  () => {
+    return import('../components/CodePreviewer');
+  },
+  { ssr: false }
+);
 import PlaintextEditor from '../components/PlaintextEditor';
 
 // Used below, these need to be registered
@@ -37,75 +43,7 @@ import IconJavaScriptSVG from '../public/icon-javascript.svg';
 import IconJSONSVG from '../public/icon-json.svg';
 
 import css from './style.module.css';
-
-const languages = [
-  'abap',
-  'apex',
-  'azcli',
-  'bat',
-  'cameligo',
-  'clojure',
-  'coffee',
-  'cpp',
-  'csharp',
-  'csp',
-  'css',
-  'dart',
-  'dockerfile',
-  'fsharp',
-  'go',
-  'graphql',
-  'handlebars',
-  'hcl',
-  'html',
-  'ini',
-  'java',
-  'javascript',
-  'json',
-  'julia',
-  'kotlin',
-  'less',
-  'lexon',
-  'lua',
-  'mips',
-  'msdax',
-  'mysql',
-  'objective-c',
-  'pascal',
-  'pascaligo',
-  'perl',
-  'pgsql',
-  'php',
-  'postiats',
-  'powerquery',
-  'powershell',
-  'pug',
-  'python',
-  'r',
-  'razor',
-  'redis',
-  'redshift',
-  'restructuredtext',
-  'ruby',
-  'rust',
-  'sb',
-  'scala',
-  'scheme',
-  'scss',
-  'shell',
-  'solidity',
-  'sophia',
-  'sql',
-  'st',
-  'swift',
-  'systemverilog',
-  'tcl',
-  'twig',
-  'typescript',
-  'vb',
-  'xml',
-  'yaml'
-];
+import { CodeLanguages } from './CodeLanguages';
 
 const TYPE_TO_ICON = {
   'text/plain': IconPlaintextSVG,
@@ -175,7 +113,9 @@ function Loader({
   setEditState,
   write,
   Editor,
-  FilePreviewer
+  FilePreviewer,
+  del,
+  ftype
 }) {
   const [value, setValue] = useState('');
 
@@ -218,14 +158,14 @@ function Loader({
           >
             <SaveIcon fontSize="small" />
           </IconButton>
-          <IconButton aria-label="Delete" size="small">
+          <IconButton aria-label="Delete" size="small" onClick={del}>
             <DeleteIcon fontSize="small" />
           </IconButton>
         </span>
       </div>
-      {!editState && <FilePreviewer value={value} />}
+      {!editState && <FilePreviewer value={value} ftype={ftype} />}
       {editState && (
-        <Editor value={value} handleValue={handleValue} ftype={file.type} />
+        <Editor value={value} handleValue={handleValue} ftype={ftype} />
       )}
     </div>
   );
@@ -247,7 +187,7 @@ const REGISTERED_EDITORS = {
 const REGISTERED_PREVIEWERS = {
   'text/plain': PlaintextPreviewer,
   'text/markdown': MarkdownPreviewer,
-  'text/code': PlaintextPreviewer
+  'text/code': CodePreviewer
 };
 
 function PlaintextFilesChallenge() {
@@ -277,27 +217,26 @@ function PlaintextFilesChallenge() {
     });
   };
 
-  // const del = fileName => {
-  //   let ind = null;
+  const del = fileName => {
+    let ind = null;
 
-  //   files.map((f, i) => {
-  //     if (f.name === fileName) {
-  //       ind = i;
-  //     }
-  //   });
+    files.map((f, i) => {
+      if (f.name === fileName) {
+        ind = i;
+      }
+    });
 
-  //   files.splice(ind, 1);
+    files.splice(ind, 1);
 
-  //   console.log(files);
-
-  //   setFiles(files);
-  // };
+    setFiles(files);
+    setActiveFile(null);
+  };
 
   const filetype = activeFile ? activeFile.type.split('/')[1] : null;
   var Editor = null;
   var FilePreviewer = null;
   if (activeFile) {
-    if (languages.includes(filetype)) {
+    if (CodeLanguages.includes(filetype)) {
       Editor = REGISTERED_EDITORS['text/code'];
       FilePreviewer = REGISTERED_PREVIEWERS['text/code'];
     } else {
@@ -355,6 +294,8 @@ function PlaintextFilesChallenge() {
                 write={write}
                 Editor={Editor}
                 FilePreviewer={FilePreviewer}
+                del={del}
+                ftype={filetype}
               />
             }
           </>

@@ -1,4 +1,4 @@
-.editor {
+.preview {
   width: 100%;
   height: auto;
   /* border: 1px solid gray; */
@@ -6,9 +6,7 @@
 }
 
 .switchbtn {
-  margin-right: 15px;
-  margin-top: 5px;
-  float: right;
+  margin-left: 500px;
 }
 
 .switchbtn .txt {
@@ -17,7 +15,7 @@
   font-size: 14px;
 }
 
-.ceditor {
+.cpreview {
   margin: 10px;
   border: 1px solid gray;
   border-radius: 3px;
@@ -31,7 +29,7 @@
   color: azure;
   font-size: 14px;
 }
-.darkeditor {
+.darkpreview {
   width: 100%;
   border: 1px solid gray;
   border-radius: 3px;

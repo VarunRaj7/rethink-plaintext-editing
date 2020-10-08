@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import SimpleMDE from 'react-simplemde-editor';
 import css from './style.module.css';
 
-function MarkdownEditor({ value, handleValue }) {
+function MarkdownEditor({ value, handleValue, ftype }) {
   return (
     <div className={css.editor}>
       <SimpleMDE onChange={handleValue} value={value} />

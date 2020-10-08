@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown/with-html';
 
 import css from './style.module.css';
 
-function MarkdownPreviewer({ value }) {
+function MarkdownPreviewer({ value, ftype }) {
   return (
     <div>
       <ReactMarkdown

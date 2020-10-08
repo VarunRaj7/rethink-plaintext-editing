@@ -4,7 +4,7 @@ import { TextareaAutosize } from '@material-ui/core';
 
 import css from './style.module.css';
 
-function PlaintextEditor({ value, handleValue }) {
+function PlaintextEditor({ value, handleValue, ftype }) {
   return (
     <div>
       <TextareaAutosize

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 // import css from '../../styles/PlaintextPreviewer.module.css';
 import css from './style.module.css';
 
-function PlaintextPreviewer({ value }) {
+function PlaintextPreviewer({ value, ftype }) {
   return <div className={css.content}>{value}</div>;
 }
 
