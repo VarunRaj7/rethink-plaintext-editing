@@ -31,11 +31,26 @@ const CodePreviewer = dynamic(
   },
   { ssr: false }
 );
-import PlaintextEditor from '../components/PlaintextEditor';
 
-// Used below, these need to be registered
-import MarkdownPreviewer from '../components/MarkdownPreviewer';
-import PlaintextPreviewer from '../components/PlaintextPreviewer';
+const PlaintextEditor = dynamic(
+  () => {
+    return import('../components/PlaintextEditor');
+  },
+  { ssr: false }
+);
+
+const MarkdownPreviewer = dynamic(
+  () => {
+    return import('../components/MarkdownPreviewer');
+  },
+  { ssr: false }
+);
+const PlaintextPreviewer = dynamic(
+  () => {
+    return import('../components/PlaintextPreviewer');
+  },
+  { ssr: false }
+);
 
 import IconPlaintextSVG from '../public/icon-plaintext.svg';
 import IconMarkdownSVG from '../public/icon-markdown.svg';
