@@ -88,7 +88,8 @@ function CodePreviewer({ value, ftype }) {
 }
 
 CodePreviewer.propTypes = {
-  value: PropTypes.object
+  value: PropTypes.object,
+  ftype: PropTypes.string
 };
 
 export default CodePreviewer;

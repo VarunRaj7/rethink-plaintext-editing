@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown/with-html';
 import css from './style.module.css';
 
 function MarkdownPreviewer({ value, ftype }) {
+  console.log(`${ftype}`);
   return (
     <div>
       <ReactMarkdown
@@ -17,7 +18,8 @@ function MarkdownPreviewer({ value, ftype }) {
 }
 
 MarkdownPreviewer.propTypes = {
-  value: PropTypes.object
+  value: PropTypes.object,
+  ftype: PropTypes.string
 };
 
 export default MarkdownPreviewer;

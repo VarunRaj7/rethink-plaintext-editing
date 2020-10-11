@@ -5,6 +5,7 @@ import { TextareaAutosize } from '@material-ui/core';
 import css from './style.module.css';
 
 function PlaintextEditor({ value, handleValue, ftype }) {
+  console.log(`${ftype}`);
   return (
     <div>
       <TextareaAutosize
@@ -18,7 +19,8 @@ function PlaintextEditor({ value, handleValue, ftype }) {
 
 PlaintextEditor.propTypes = {
   value: PropTypes.object,
-  handleValue: PropTypes.func
+  handleValue: PropTypes.func,
+  ftype: PropTypes.string
 };
 
 export default PlaintextEditor;

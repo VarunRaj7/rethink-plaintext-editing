@@ -119,7 +119,8 @@ function FilesTable({ files, activeFile, setActiveFile, setEditState }) {
 FilesTable.propTypes = {
   files: PropTypes.arrayOf(PropTypes.object),
   activeFile: PropTypes.object,
-  setActiveFile: PropTypes.func
+  setActiveFile: PropTypes.func,
+  setEditState: PropTypes.func
 };
 
 function Loader({
@@ -136,7 +137,8 @@ function Loader({
 
   useEffect(() => {
     (async () => {
-      setValue(await file.text());
+      const f = await localStorage.getItem(file.name);
+      setValue(f ? f : await file.text());
     })();
   }, [file]);
 
@@ -152,7 +154,7 @@ function Loader({
   function handleOnSave() {
     console.log('Saving..');
     setValue(value.trim());
-    write(file.name, value.trim());
+    write(value.trim());
     handleEdit(false);
   }
 
@@ -186,13 +188,17 @@ function Loader({
   );
 }
 
-//className={editState === false ? css.content : css.edit}
-
 Loader.propTypes = {
-  file: PropTypes.object
+  file: PropTypes.object,
+  editState: PropTypes.bool,
+  setEditState: PropTypes.func,
+  write: PropTypes.func,
+  Editor: PropTypes.object,
+  FilePreviewer: PropTypes.object,
+  del: PropTypes.func,
+  ftype: PropTypes.string
 };
 
-// Uncomment keys to register editors for media types
 const REGISTERED_EDITORS = {
   'text/plain': PlaintextEditor,
   'text/markdown': MarkdownEditor,
@@ -215,34 +221,39 @@ function PlaintextFilesChallenge() {
     setFiles(files);
   }, []);
 
-  const write = (fileName, value) => {
+  const write = async value => {
     let ftype = null;
     let ind = null;
 
     files.map((f, i) => {
-      if (f.name === fileName) {
+      if (f.name === activeFile.name) {
         ftype = f.type;
         ind = i;
       }
     });
 
-    files[ind] = new File([value], fileName, {
+    files[ind] = new File([value], activeFile.name, {
       type: ftype,
       lastModified: new Date()
     });
+    setFiles(files);
+    localStorage.setItem(activeFile.name, await files[ind].text());
   };
 
-  const del = fileName => {
+  const del = () => {
     let ind = null;
 
     files.map((f, i) => {
-      if (f.name === fileName) {
+      if (f.name === activeFile.name) {
         ind = i;
       }
     });
 
+    console.log(ind);
+
     files.splice(ind, 1);
 
+    localStorage.removeItem(activeFile.name);
     setFiles(files);
     setActiveFile(null);
   };

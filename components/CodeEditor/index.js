@@ -91,7 +91,8 @@ function CodeEditor({ value, handleValue, ftype }) {
 
 CodeEditor.propTypes = {
   value: PropTypes.object,
-  handleValue: PropTypes.func
+  handleValue: PropTypes.func,
+  ftype: PropTypes.string
 };
 
 export default CodeEditor;

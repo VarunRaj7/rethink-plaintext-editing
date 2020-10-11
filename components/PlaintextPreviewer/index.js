@@ -4,11 +4,13 @@ import PropTypes from 'prop-types';
 import css from './style.module.css';
 
 function PlaintextPreviewer({ value, ftype }) {
+  console.log(`${ftype}`);
   return <div className={css.content}>{value}</div>;
 }
 
 PlaintextPreviewer.propTypes = {
-  value: PropTypes.object
+  value: PropTypes.object,
+  ftype: PropTypes.string
 };
 
 export default PlaintextPreviewer;
