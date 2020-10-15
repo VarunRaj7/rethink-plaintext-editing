@@ -9,7 +9,7 @@ function PlaintextPreviewer({ value, ftype }) {
 }
 
 PlaintextPreviewer.propTypes = {
-  value: PropTypes.object,
+  value: PropTypes.string,
   ftype: PropTypes.string
 };
 
