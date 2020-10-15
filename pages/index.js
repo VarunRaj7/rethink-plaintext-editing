@@ -8,11 +8,18 @@ import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/Delete';
 import dynamic from 'next/dynamic';
-// import { TextareaAutosize } from '@material-ui/core';
 
 import { listFiles } from '../files';
 
-// Used below, these need to be registered
+import IconPlaintextSVG from '../public/icon-plaintext.svg';
+import IconMarkdownSVG from '../public/icon-markdown.svg';
+import IconJavaScriptSVG from '../public/icon-javascript.svg';
+import IconJSONSVG from '../public/icon-json.svg';
+
+import css from './style.module.css';
+import { CodeLanguages } from './CodeLanguages';
+
+// Import the components dynamically
 const MarkdownEditor = dynamic(
   () => {
     return import('../components/MarkdownEditor');
@@ -51,14 +58,6 @@ const PlaintextPreviewer = dynamic(
   },
   { ssr: false }
 );
-
-import IconPlaintextSVG from '../public/icon-plaintext.svg';
-import IconMarkdownSVG from '../public/icon-markdown.svg';
-import IconJavaScriptSVG from '../public/icon-javascript.svg';
-import IconJSONSVG from '../public/icon-json.svg';
-
-import css from './style.module.css';
-import { CodeLanguages } from './CodeLanguages';
 
 const TYPE_TO_ICON = {
   'text/plain': IconPlaintextSVG,
@@ -135,6 +134,7 @@ function Loader({
 }) {
   const [value, setValue] = useState('');
 
+  // loading the files from the local storage or file.js
   useEffect(() => {
     (async () => {
       const f = await localStorage.getItem(file.name);
@@ -142,15 +142,19 @@ function Loader({
     })();
   }, [file]);
 
+  // handling the edit state of the editor
   function handleEdit(newState = !editState) {
     setEditState(newState);
   }
 
+  // handing the value in the editor
   function handleValue(val) {
     console.log(val);
     setValue(val);
   }
 
+  // saving the edits in the local storage
+  // to persist the save on reload using write function
   function handleOnSave() {
     console.log('Saving..');
     setValue(value.trim());
@@ -221,6 +225,8 @@ function PlaintextFilesChallenge() {
     setFiles(files);
   }, []);
 
+  // saves the value of the file
+  //  to the local storage
   const write = async value => {
     let ftype = null;
     let ind = null;
@@ -240,6 +246,7 @@ function PlaintextFilesChallenge() {
     localStorage.setItem(activeFile.name, await files[ind].text());
   };
 
+  // deleting the file
   const del = () => {
     let ind = null;
 
@@ -261,6 +268,8 @@ function PlaintextFilesChallenge() {
   const filetype = activeFile ? activeFile.type.split('/')[1] : null;
   var Editor = null;
   var FilePreviewer = null;
+
+  // choosing the editor or previewer
   if (activeFile) {
     if (CodeLanguages.includes(filetype)) {
       Editor = REGISTERED_EDITORS['text/code'];
